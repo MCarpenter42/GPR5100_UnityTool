@@ -136,6 +136,23 @@ namespace NeoCambion
             }
             return output;
         }
+
+        public static bool ValidTypeName(this string typeName)
+        {
+            return Type.GetType(typeName) != null;
+        }
+
+        public static Type TypeFromName(this string typeName)
+        {
+            if (typeName.ValidTypeName())
+            {
+                return Type.GetType(typeName);
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 
     namespace Unity

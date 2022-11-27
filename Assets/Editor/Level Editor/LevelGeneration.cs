@@ -44,7 +44,7 @@ public class LevelGeneration : Core
 
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 	
-    public void Generate(GameObject floorPrefab, FloorType floorType, WorldSpace worldSpace, Vector3Int levelSize, float levelUnitScale, float noiseScale, float noiseThreshold, float clcGenRate, List<ObjectWithPercent> collectibleTypeList)
+    public void Generate(string floorPrefab, FloorType floorType, WorldSpace worldSpace, Vector3Int levelSize, float levelUnitScale, float noiseScale, float noiseThreshold, float clcGenRate, List<StringWithPercent> collectibleTypeList)
     {
         ReceiveGenerationData(floorPrefab, floorType, worldSpace, levelSize, levelUnitScale, noiseScale, noiseThreshold, clcGenRate, collectibleTypeList);
         Generate();
@@ -57,7 +57,7 @@ public class LevelGeneration : Core
         GenerateCollectibles();
     }
 
-    public void ReceiveGenerationData(GameObject floorPrefab, FloorType floorType, WorldSpace worldSpace, Vector3Int levelSize, float levelUnitScale, float noiseScale, float noiseThreshold, float clcGenRate, List<ObjectWithPercent> collectibleTypeList)
+    public void ReceiveGenerationData(string floorPrefab, FloorType floorType, WorldSpace worldSpace, Vector3Int levelSize, float levelUnitScale, float noiseScale, float noiseThreshold, float clcGenRate, List<StringWithPercent> collectibleTypeList)
     {
         genData = new LevelGenData(floorPrefab, floorType, worldSpace, levelSize, levelUnitScale, noiseScale, noiseThreshold, clcGenRate, collectibleTypeList);
         dataReceived = true;
@@ -95,7 +95,7 @@ public class LevelGeneration : Core
 
         genData.worldSpace.Reset();
 
-        GameObject mainFloor = Instantiate(genData.floorPrefab, genData.worldSpace.contTranform_Floor);
+        GameObject mainFloor = Instantiate(Resources.Load(genData.floorPrefab) as GameObject, genData.worldSpace.contTranform_Floor);
         Vector3 scale = mainFloor.transform.localScale;
         scale.x = (float)genData.levelSize.x * genData.levelUnitScale;
         scale.z = (float)genData.levelSize.z * genData.levelUnitScale;
@@ -120,41 +120,41 @@ public class LevelGeneration : Core
                     raisedFloor.transform.localPosition = pos;
                     if (genData.floorType == FloorType.Cuboid)
                     {
-                        GameObject floorObj = Instantiate(genData.floorPrefab, raisedFloor.transform);
+                        GameObject floorObj = Instantiate(Resources.Load(genData.floorPrefab) as GameObject, raisedFloor.transform);
                         floorObj.transform.localScale = new Vector3(genData.levelUnitScale, pointElevation, genData.levelUnitScale);
                         floorObj.transform.localPosition = new Vector3(0.0f, -(pointElevation / 2.0f), 0.0f);
                     }
                     else if (genData.floorType == FloorType.Plane)
                     {
-                        GameObject floorObj = Instantiate(genData.floorPrefab, raisedFloor.transform);
+                        GameObject floorObj = Instantiate(Resources.Load(genData.floorPrefab) as GameObject, raisedFloor.transform);
                         floorObj.transform.localScale = new Vector3(genData.levelUnitScale, 1.0f, genData.levelUnitScale);
                         floorObj.transform.localPosition = Vector3.zero;
 
                         int n = (int)(pointElevation - (pointElevation % genData.levelUnitScale)) + 1;
                         if (z > genData.levelSize.z || elevation.Map[x, z + 1] < pointElevation)
                         {
-                            GameObject wallPsZ = Instantiate(genData.floorPrefab, raisedFloor.transform);
+                            GameObject wallPsZ = Instantiate(Resources.Load(genData.floorPrefab) as GameObject, raisedFloor.transform);
                             wallPsZ.transform.localScale = new Vector3(genData.levelUnitScale, 1.0f, genData.levelUnitScale * (float)n);
                             wallPsZ.transform.localPosition = new Vector3(0.0f, -genData.levelUnitScale * (float)n, genData.levelUnitScale / 2.0f);
                             wallPsZ.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
                         }
                         if (x > genData.levelSize.x || elevation.Map[x + 1, z] < pointElevation)
                         {
-                            GameObject wallPsX = Instantiate(genData.floorPrefab, raisedFloor.transform);
+                            GameObject wallPsX = Instantiate(Resources.Load(genData.floorPrefab) as GameObject, raisedFloor.transform);
                             wallPsX.transform.localScale = new Vector3(genData.levelUnitScale * (float)n, 1.0f, genData.levelUnitScale);
                             wallPsX.transform.localPosition = new Vector3(genData.levelUnitScale / 2.0f, -genData.levelUnitScale * (float)n, 0.0f);
                             wallPsX.transform.eulerAngles = new Vector3(0.0f, 0.0f, -90.0f);
                         }
                         if (z < 1 || elevation.Map[x, z - 1] < pointElevation)
                         {
-                            GameObject wallNgZ = Instantiate(genData.floorPrefab, raisedFloor.transform);
+                            GameObject wallNgZ = Instantiate(Resources.Load(genData.floorPrefab) as GameObject, raisedFloor.transform);
                             wallNgZ.transform.localScale = new Vector3(genData.levelUnitScale, 1.0f, genData.levelUnitScale * (float)n);
                             wallNgZ.transform.localPosition = new Vector3(0.0f, -genData.levelUnitScale * (float)n, -(genData.levelUnitScale / 2.0f));
                             wallNgZ.transform.eulerAngles = new Vector3(-90.0f, 0.0f, 0.0f);
                         }
                         if (x < 1 || elevation.Map[x - 1, z] < pointElevation)
                         {
-                            GameObject wallNgX = Instantiate(genData.floorPrefab, raisedFloor.transform);
+                            GameObject wallNgX = Instantiate(Resources.Load(genData.floorPrefab) as GameObject, raisedFloor.transform);
                             wallNgX.transform.localScale = new Vector3(genData.levelUnitScale * (float)n, 1.0f, genData.levelUnitScale);
                             wallNgX.transform.localPosition = new Vector3(-(genData.levelUnitScale / 2.0f), -genData.levelUnitScale * (float)n, 0.0f);
                             wallNgX.transform.eulerAngles = new Vector3(0.0f, 0.0f, 90.0f);
@@ -182,11 +182,11 @@ public class LevelGeneration : Core
                         Vector3 pos = new Vector3(-((float)genData.levelSize.x / 2.0f) + (0.5f * genData.levelUnitScale), y, -((float)genData.levelSize.z / 2.0f) + (0.5f * genData.levelUnitScale));
                         pos += new Vector3((float)x * genData.levelUnitScale, 0.0f, (float)z * genData.levelUnitScale);
 
-                        GameObject chosen = PickCollectible();
-                        if (chosen != null)
+                        string chosenPath = PickCollectible();
+                        if (chosenPath != null)
                         {
-                            lvlData.collectibleSpawns.Add(pos, chosen);
-                            GameObject collectible = Instantiate(chosen, genData.worldSpace.contTranform_Collectibles);
+                            GameObject collectible = Instantiate(Resources.Load(chosenPath) as GameObject, genData.worldSpace.contTranform_Collectibles);
+                            lvlData.collectibleSpawns.Add(pos, collectible);
                             collectible.transform.localPosition = pos;
                         }
                     }
@@ -195,7 +195,7 @@ public class LevelGeneration : Core
         }
     }
 
-    public GameObject PickCollectible()
+    public string PickCollectible()
     {
         float r = Random.Range(0.0f, 1.0f);
         float totalThreshold = 0.0f;
@@ -204,7 +204,8 @@ public class LevelGeneration : Core
             totalThreshold += genData.collectibleTypeList[i].FloatValue;
             if (r < totalThreshold)
             {
-                return genData.collectibleTypeList[i].Obj as GameObject;
+                Debug.Log(genData.collectibleTypeList[i].Str);
+                return genData.collectibleTypeList[i].Str;
             }
         }
         return null;
@@ -214,7 +215,7 @@ public class LevelGeneration : Core
 [System.Serializable]
 public class LevelGenData
 {
-    public GameObject floorPrefab;
+    public string floorPrefab;
 	public LevelGeneration.FloorType floorType;
     public WorldSpace worldSpace;
     public Vector3Int levelSize;
@@ -222,9 +223,12 @@ public class LevelGenData
     public float noiseScale;
     public float noiseThreshold;
     public float clcGenRate;
-    public List<ObjectWithPercent> collectibleTypeList;
+    public List<StringWithPercent> collectibleTypeList;
 
-    public LevelGenData(GameObject floorPrefab, LevelGeneration.FloorType floorType, WorldSpace worldSpace, Vector3Int levelSize, float levelUnitScale, float noiseScale, float noiseThreshold, float clcGenRate, List<ObjectWithPercent> collectibleTypeList)
+    public LevelGenData()
+    { }
+
+    public LevelGenData(string floorPrefab, LevelGeneration.FloorType floorType, WorldSpace worldSpace, Vector3Int levelSize, float levelUnitScale, float noiseScale, float noiseThreshold, float clcGenRate, List<StringWithPercent> collectibleTypeList)
     {
         this.floorPrefab = floorPrefab;
         this.floorType = floorType;

@@ -18,9 +18,77 @@ using NeoCambion.Maths;
 using NeoCambion.Unity;
 using UnityEditor.Compilation;
 
+[System.Serializable]
+public class StringWithPercent
+{
+    public string Str;
+    public float FloatValue;
+    public float Percent
+    {
+        get
+        {
+            return FloatValue * 100.0f;
+        }
+        set
+        {
+            if (value < 0.0f)
+            {
+                FloatValue = 0.0f;
+            }
+            else if (value > 100.0f)
+            {
+                FloatValue = 1.0f;
+            }
+            else
+            {
+                FloatValue = value / 100.0f;
+            }
+        }
+    }
+
+    public StringWithPercent()
+    { }
+    
+    public StringWithPercent(string str, float percent)
+    {
+        Str = str;
+        Percent = percent;
+    }
+
+    /*public ObjectWithPercent DrawAsProperty()
+    {
+        EditorGUILayout.BeginHorizontal();
+        {
+            Obj = EditorGUILayout.ObjectField(new GUIContent(), Obj, typeof(GameObject), true, GUILayout.MinWidth(100.0f)) as GameObject;
+            GUILayout.Label(":", GUILayout.MinWidth(8.0f), GUILayout.MaxWidth(8.0f));
+            Percent = EditorGUILayout.DelayedFloatField(Percent, GUILayout.MinWidth(45.0f), GUILayout.MaxWidth(45.0f));
+            GUILayout.Label("%", GUILayout.MinWidth(15.0f), GUILayout.MaxWidth(15.0f));
+        }
+        EditorGUILayout.EndHorizontal();
+
+        return this;
+    }
+
+    public ObjectWithPercent DrawAsProperty(string propertyName)
+    {
+        EditorGUILayout.BeginHorizontal();
+        {
+            EditorGUILayout.PrefixLabel(propertyName);
+            Obj = EditorGUILayout.ObjectField(new GUIContent(), Obj, typeof(GameObject), true, GUILayout.MinWidth(100.0f)) as GameObject;
+            GUILayout.Label(":", GUILayout.MinWidth(8.0f), GUILayout.MaxWidth(8.0f));
+            Percent = EditorGUILayout.DelayedFloatField(Percent, GUILayout.MinWidth(45.0f), GUILayout.MaxWidth(45.0f));
+            GUILayout.Label("%", GUILayout.MinWidth(15.0f), GUILayout.MaxWidth(15.0f));
+        }
+        EditorGUILayout.EndHorizontal();
+
+        return this;
+    }*/
+}
+
+[System.Serializable]
 public class ObjectWithPercent
 {
-    public Object Obj;
+    public GameObject Obj;
     public float FloatValue { get; private set; }
     public float Percent
     {
@@ -45,11 +113,20 @@ public class ObjectWithPercent
         }
     }
 
+    public ObjectWithPercent()
+    { }
+    
+    public ObjectWithPercent(GameObject obj, float percent)
+    {
+        Obj = obj;
+        Percent = percent;
+    }
+
     public ObjectWithPercent DrawAsProperty()
     {
         EditorGUILayout.BeginHorizontal();
         {
-            Obj = EditorGUILayout.ObjectField(new GUIContent(), Obj, typeof(Object), true, GUILayout.MinWidth(100.0f));
+            Obj = EditorGUILayout.ObjectField(new GUIContent(), Obj, typeof(GameObject), true, GUILayout.MinWidth(100.0f)) as GameObject;
             GUILayout.Label(":", GUILayout.MinWidth(8.0f), GUILayout.MaxWidth(8.0f));
             Percent = EditorGUILayout.DelayedFloatField(Percent, GUILayout.MinWidth(45.0f), GUILayout.MaxWidth(45.0f));
             GUILayout.Label("%", GUILayout.MinWidth(15.0f), GUILayout.MaxWidth(15.0f));
@@ -64,7 +141,7 @@ public class ObjectWithPercent
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.PrefixLabel(propertyName);
-            Obj = EditorGUILayout.ObjectField(new GUIContent(), Obj, typeof(Object), true, GUILayout.MinWidth(100.0f));
+            Obj = EditorGUILayout.ObjectField(new GUIContent(), Obj, typeof(GameObject), true, GUILayout.MinWidth(100.0f)) as GameObject;
             GUILayout.Label(":", GUILayout.MinWidth(8.0f), GUILayout.MaxWidth(8.0f));
             Percent = EditorGUILayout.DelayedFloatField(Percent, GUILayout.MinWidth(45.0f), GUILayout.MaxWidth(45.0f));
             GUILayout.Label("%", GUILayout.MinWidth(15.0f), GUILayout.MaxWidth(15.0f));
